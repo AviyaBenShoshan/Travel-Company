@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-popup',
@@ -6,10 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./popup.component.scss']
 })
 export class PopupComponent implements OnInit {
-
-  constructor() { }
-
+ 
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) { }
+  
   ngOnInit(): void {
-  }
-
+  } 
 }

@@ -1,1 +1,28 @@
-<p>travels-view works!</p>
+<mat-table [dataSource]="allFlights" class="mat-elevation-z8">
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    <!-- Dest Country Column -->
+    <ng-container matColumnDef="destCountry">
+        <mat-header-cell *matHeaderCellDef> מדינת יעד </mat-header-cell>
+        <mat-cell *matCellDef="let flight"> {{flight.dest}} </mat-cell>
+    </ng-container>
+
+    <!-- Departure Date Column -->
+    <ng-container matColumnDef="departureDate">
+        <mat-header-cell *matHeaderCellDef> תאריך המראה </mat-header-cell>
+        <mat-cell *matCellDef="let flight"> {{flight.departure}} </mat-cell>
+    </ng-container>
+
+    <!-- Return Date Column -->
+    <ng-container matColumnDef="returnDate">
+        <mat-header-cell *matHeaderCellDef> תאריך חזרה</mat-header-cell>
+        <mat-cell *matCellDef="let flight"> {{flight.return}} </mat-cell>
+    </ng-container>
+
+    <!-- Note Column -->
+    <ng-container matColumnDef="note">
+        <mat-header-cell *matHeaderCellDef> הערות </mat-header-cell>
+        <mat-cell *matCellDef="let flight"> {{flight.note}} </mat-cell>
+    </ng-container>
+</mat-table>
