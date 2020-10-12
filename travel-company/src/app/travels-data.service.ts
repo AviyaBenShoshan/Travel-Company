@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { Http } from "@angular/http";
 import { map } from 'rxjs/operators';
 import {Flight} from 'src/Models/Flight';
@@ -9,15 +9,16 @@ import {Flight} from 'src/Models/Flight';
 })
 export class TravelsDataService {
   apiUrl: string = "restcountries.eu";
-  private flightsSubject = new Subject<Flight>();
+  flightsSubject: BehaviorSubject<Flight[]> = new BehaviorSubject([]);
 
   constructor(private https: Http) { }
 
-  sendMessage(message: string) {
+  addFlight(newFlight: Flight) {
     //this.flightsSubject.next({ text: message });
+    this.flightsSubject.next(this.flightsSubject.value.concat([newFlight]));
   }
 
-  getMessage(): Observable<Flight> {
+  getAllFlights(): Observable<Flight[]> {
     return this.flightsSubject.asObservable();
   }
 

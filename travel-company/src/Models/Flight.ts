@@ -6,9 +6,7 @@ export class Flight
     note: string;
 
     constructor(){
-        this.destCountry = "";
-        this.departureDate = new Date();
-        this.returnDate = new Date();
+        this.destCountry = "";      
         this.note = "";
     }   
 }

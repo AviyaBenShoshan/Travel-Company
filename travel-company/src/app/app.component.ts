@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 import { TravelsDataService } from './travels-data.service';
 import { Flight } from '../Models/Flight';
 import { MatDialog } from '@angular/material/dialog'
-import {PopupComponent} from 'src/app/popup/popup.component';
+import { PopupComponent } from 'src/app/popup/popup.component';
 
 @Component({
   selector: 'app-root',
@@ -20,11 +20,11 @@ export class AppComponent implements OnInit {
   @Input()
   currentFlight: Flight;
 
-  constructor(private countryService: TravelsDataService, private popup: MatDialog) {
+  constructor(private travelDataService: TravelsDataService, private popup: MatDialog) {
   }
 
   ngOnInit() {
-    this.countryService.getAllCountries().subscribe((countries) => { this.countriesOptions = countries });
+    this.travelDataService.getAllCountries().subscribe((countries) => { this.countriesOptions = countries });
     // this.filteredOptions = this.countryControl.valueChanges.pipe(
     //   startWith(''),
     //   map(value => this._filter(value))
@@ -38,35 +38,36 @@ export class AppComponent implements OnInit {
   }
 
   addFlight() {
-
+    this.travelDataService.addFlight(this.currentFlight);
+    this.currentFlight = new Flight();
   }
 
-   OnDepartueDateChange(date) {
-    if (Date.now() > date){
+  OnDepartueDateChange(date) {
+    if (Date.now() > date) {
       this.openPopup("תאריך ההמראה שבחרת כבר עבר");
       return;
     }
-    if (this.currentFlight.returnDate < date){
-      this.openPopup("תאריך ההמראה שבחרת הוא אחרי תאריך היציאה");
+    if (this.currentFlight.returnDate && this.currentFlight.returnDate < date) {
+      this.openPopup("תאריך ההמראה שבחרת אינו מתאים לתאריך החזרה");
       return;
-    }      
+    }
     this.currentFlight.departureDate = date;
   }
 
   OnReturnDateChange(date) {
-    if (Date.now() > date){
+    if (Date.now() > date) {
       this.openPopup("תאריך החזרה שבחרת כבר עבר");
       return;
     }
-    if (this.currentFlight.departureDate > date){
-      this.openPopup("תאריך החזרה שבחרת הוא לפני תאריך החזרה");
+    if (this.currentFlight.departureDate && this.currentFlight.departureDate > date) {
+      this.openPopup("תאריך החזרה שבחרת אינו מתאים לתאריך ההמראה");
       return;
     }
-      this.currentFlight.returnDate = date;      
+    this.currentFlight.returnDate = date;
   }
 
-  openPopup(message :string) {
-   this.popup.open(PopupComponent, {data: {message: message}}); 
+  openPopup(message: string) {
+    this.popup.open(PopupComponent, { data: { message: message } });
   }
-  
+
 }
