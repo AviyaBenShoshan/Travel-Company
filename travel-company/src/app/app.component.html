@@ -10,11 +10,11 @@
     </div>
 
     <div class="col py-4">
-      <form>
+      <form [formGroup]="newFlightForm" (ngSubmit)="onSubmit()">
         <!-- choose country -->
         <div class="row" style="display: flow-root;">
           <mat-form-field class="form-field">
-            <input type="text" placeholder="מדינה" [(ngModel)]="currentFlight.destCountry" matInput [matAutocomplete]="auto" [formControl]="countryControl">
+            <input type="text" placeholder="מדינה" formControlName="destCountry" matInput [matAutocomplete]="auto">
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
               <mat-option *ngFor="let option of countriesOptions" [value]="option">
                 {{option}}
@@ -25,15 +25,15 @@
         <div class="row">
           <!-- pick Return date -->
           <mat-form-field class="form-field col">
-            <mat-label>תאריך עד</mat-label>
-            <input matInput [matDatepicker]="ReturnPicker" (dateInput)="OnReturnDateChange($event.value)">
+            <mat-label>תאריך עד</mat-label>         
+            <input matInput [matDatepicker]="ReturnPicker" formControlName="returnDate" required>
             <mat-datepicker-toggle matSuffix [for]="ReturnPicker"></mat-datepicker-toggle>
             <mat-datepicker #ReturnPicker></mat-datepicker>
           </mat-form-field>        
         <!-- pick Departure date -->
         <mat-form-field class="form-field col">
-          <mat-label>תאריך מ</mat-label>
-          <input matInput [matDatepicker]="DeparturePicker" (dateInput)="OnDepartueDateChange($event.value)">
+          <mat-label>תאריך מ</mat-label>        
+          <input matInput [matDatepicker]="DeparturePicker" formControlName="departureDate" required>
           <mat-datepicker-toggle matSuffix [for]="DeparturePicker"></mat-datepicker-toggle>
           <mat-datepicker #DeparturePicker></mat-datepicker>
         </mat-form-field>
@@ -42,11 +42,11 @@
         <div class="row">
           <mat-form-field class="form-field" style="width: 100%;">
             <mat-label>הערות</mat-label>
-            <input matInput #comment maxlength="256"  [(ngModel)]="currentFlight.note" name="notes" placeholder="הוסף הערה">
+            <input matInput #comment maxlength="256" formControlName="note" placeholder="הוסף הערה">
             <mat-hint align="end">{{comment.value.length}} / 256</mat-hint>
           </mat-form-field>
         </div>
-        <button mat-raised-button class="row button px-4 py-2" (click)="addFlight()">שלח</button>
+        <button mat-raised-button class="row button px-4 py-2" type="submit">שלח</button>
       </form>
     </div>
   </div>

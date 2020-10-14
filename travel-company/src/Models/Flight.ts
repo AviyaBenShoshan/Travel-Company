@@ -8,5 +8,5 @@ export class Flight
     constructor(){
         this.destCountry = "";      
         this.note = "";
-    }   
+    }
 }

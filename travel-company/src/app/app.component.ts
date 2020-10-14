@@ -1,9 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Observable, from } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { FormControl, FormGroup, Validator, AbstractControl } from '@angular/forms';
 import { TravelsDataService } from './travels-data.service';
-import { Flight } from '../Models/Flight';
 import { MatDialog } from '@angular/material/dialog'
 import { PopupComponent } from 'src/app/popup/popup.component';
 
@@ -13,12 +11,14 @@ import { PopupComponent } from 'src/app/popup/popup.component';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  countryControl = new FormControl();
   countriesOptions: string[];
   filteredOptions: Observable<string[]>;
-
-  @Input()
-  currentFlight: Flight;
+  newFlightForm = new FormGroup({
+    destCountry: new FormControl(''),
+    returnDate: new FormControl('', this.dateValidator),
+    departureDate: new FormControl('', this.dateValidator),
+    note: new FormControl('')
+  });
 
   constructor(private travelDataService: TravelsDataService, private popup: MatDialog) {
   }
@@ -28,8 +28,7 @@ export class AppComponent implements OnInit {
     // this.filteredOptions = this.countryControl.valueChanges.pipe(
     //   startWith(''),
     //   map(value => this._filter(value))
-    // ); 
-    this.currentFlight = new Flight();
+    // );   
   }
 
   private _filter(value: string): string[] {
@@ -37,33 +36,30 @@ export class AppComponent implements OnInit {
     return this.countriesOptions.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  addFlight() {
-    this.travelDataService.addFlight(this.currentFlight);
-    this.currentFlight = new Flight();
+  dateValidator(date: FormControl) {
+    if (Date.now() > date.value)
+      return { valid: false }
+    return;
   }
 
-  OnDepartueDateChange(date) {
-    if (Date.now() > date) {
-      this.openPopup("תאריך ההמראה שבחרת כבר עבר");
-      return;
-    }
-    if (this.currentFlight.returnDate && this.currentFlight.returnDate < date) {
-      this.openPopup("תאריך ההמראה שבחרת אינו מתאים לתאריך החזרה");
-      return;
-    }
-    this.currentFlight.departureDate = date;
+  returnAndDepartueCompatible(departureDate: AbstractControl, returnDate: AbstractControl) {
+    if (returnDate.value && departureDate.value && departureDate.value > returnDate.value)
+      return false;
+    return true;
   }
 
-  OnReturnDateChange(date) {
-    if (Date.now() > date) {
-      this.openPopup("תאריך החזרה שבחרת כבר עבר");
+  onSubmit() {
+    if (!this.returnAndDepartueCompatible(this.newFlightForm.controls["departureDate"],
+      this.newFlightForm.controls["returnDate"])) {
+      this.openPopup("תאריך ההמראה והחזרה לא מתאימים");
       return;
     }
-    if (this.currentFlight.departureDate && this.currentFlight.departureDate > date) {
-      this.openPopup("תאריך החזרה שבחרת אינו מתאים לתאריך ההמראה");
+    if (!this.newFlightForm.valid){
+      this.openPopup("שים לב! התאריך כבר עבר");      
       return;
-    }
-    this.currentFlight.returnDate = date;
+   }   
+    this.travelDataService.addFlight(this.newFlightForm.value);
+    this.newFlightForm.reset();
   }
 
   openPopup(message: string) {
