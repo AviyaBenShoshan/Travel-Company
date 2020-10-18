@@ -14,8 +14,7 @@ export class TravelsDataService {
   constructor(private https: Http) { }
 
   addFlight(newFlight: Flight) {
-    //this.flightsSubject.next({ text: message });
-    this.flightsSubject.next(this.flightsSubject.value.concat([newFlight]));
+    this.flightsSubject.next(this.flightsSubject.value.concat([newFlight]));    
   }
 
   getAllFlights(): Observable<Flight[]> {
@@ -23,12 +22,18 @@ export class TravelsDataService {
   }
 
 
-  getAllCountries(): Observable<string[]> {
-    return this.https.get('http://restcountries.eu/rest/v2/all').pipe(
-      map(res => {
-        let countries = res.json().map(item => item.name)
-        return countries;
-      })
-    );
-  }
+  getAllCountries() : Promise<string[]>{
+    return new Promise((resolve, reject) => {
+      this.https.get('http://restcountries.eu/rest/v2/all').toPromise().then(
+          res => { // Success
+            let countries = res.json().map(item => item.name);
+            console.log("finish internal");
+          resolve(countries);
+          },
+          msg => { // Error
+          reject(msg);
+          }
+        );
+    });
+  }    
 }

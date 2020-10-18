@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FormControl, FormGroup, Validator, AbstractControl } from '@angular/forms';
+import { FormControl, FormGroup, AbstractControl } from '@angular/forms';
 import { TravelsDataService } from './travels-data.service';
 import { MatDialog } from '@angular/material/dialog'
 import { PopupComponent } from 'src/app/popup/popup.component';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -24,11 +25,13 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.travelDataService.getAllCountries().subscribe((countries) => { this.countriesOptions = countries });
-    // this.filteredOptions = this.countryControl.valueChanges.pipe(
-    //   startWith(''),
-    //   map(value => this._filter(value))
-    // );   
+    this.travelDataService.getAllCountries().then(countries => {
+      this.countriesOptions = countries;
+      this.filteredOptions = this.newFlightForm.controls["destCountry"].valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+    });
   }
 
   private _filter(value: string): string[] {
@@ -55,9 +58,9 @@ export class AppComponent implements OnInit {
       return;
     }
     if (!this.newFlightForm.valid){
-      this.openPopup("שים לב! התאריך כבר עבר");      
+      this.openPopup("שים לב! התאריך כבר עבר");
       return;
-   }   
+    }
     this.travelDataService.addFlight(this.newFlightForm.value);
     this.newFlightForm.reset();
   }
