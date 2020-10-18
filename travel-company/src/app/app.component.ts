@@ -35,8 +35,8 @@ export class AppComponent implements OnInit {
   }
 
   private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.countriesOptions.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+      const filterValue = value.toLowerCase();
+      return this.countriesOptions.filter(option => option.toLowerCase().indexOf(filterValue) === 0);    
   }
 
   dateValidator(date: FormControl) {
@@ -62,7 +62,7 @@ export class AppComponent implements OnInit {
       return;
     }
     this.travelDataService.addFlight(this.newFlightForm.value);
-    this.newFlightForm.reset();
+    this.newFlightForm.setValue({destCountry: '', returnDate: '',departureDate:'',note: '' });   
   }
 
   openPopup(message: string) {

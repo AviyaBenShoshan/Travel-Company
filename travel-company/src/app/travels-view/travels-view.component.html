@@ -5,19 +5,20 @@
     <!-- Dest Country Column -->
     <ng-container matColumnDef="destCountry">
         <mat-header-cell *matHeaderCellDef> מדינת יעד </mat-header-cell>
-        <mat-cell *matCellDef="let flight"> {{flight.dest}} </mat-cell>
+        <mat-cell *matCellDef="let flight"> {{flight.destCountry}} </mat-cell>
     </ng-container>
 
     <!-- Departure Date Column -->
     <ng-container matColumnDef="departureDate">
         <mat-header-cell *matHeaderCellDef> תאריך המראה </mat-header-cell>
-        <mat-cell *matCellDef="let flight"> {{flight.departure}} </mat-cell>
+        <mat-cell *matCellDef="let flight"> {{flight.departureDate | date:"shortDate"}} 
+    </mat-cell>
     </ng-container>
 
     <!-- Return Date Column -->
     <ng-container matColumnDef="returnDate">
         <mat-header-cell *matHeaderCellDef> תאריך חזרה</mat-header-cell>
-        <mat-cell *matCellDef="let flight"> {{flight.return}} </mat-cell>
+        <mat-cell *matCellDef="let flight"> {{flight.returnDate | date:"shortDate"}} </mat-cell>
     </ng-container>
 
     <!-- Note Column -->

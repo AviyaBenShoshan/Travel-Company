@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Flight } from '../../Models/Flight';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TravelsDataService } from '../travels-data.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { TravelsDataService } from '../travels-data.service';
   styleUrls: ['./travels-view.component.scss']
 })
 export class TravelsViewComponent implements OnInit {
-  allFlights: Flight[] = [];
+  allFlights: Flight[] = [];  
   subscription: Subscription;
   displayedColumns: string[] = ['destCountry', 'departureDate', 'returnDate', 'note'];
 
